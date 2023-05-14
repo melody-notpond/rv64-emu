@@ -18,12 +18,22 @@ void step(RiscV64Cpu* cpu) {
     uint32_t opcode = instruction & 0x7f;
 
     switch (opcode) {
-        // ADD rd, rs1, rs2
+        // operation without immediate
         case 0b0110011: {
             int rd  = (instruction >>  7) & 0b11111;
             int rs1 = (instruction >> 15) & 0b11111;
             int rs2 = (instruction >> 20) & 0b11111;
-            cpu->xs[rd] = cpu->xs[rs1] + cpu->xs[rs2];
+            int funct3 = (instruction >> 12) & 3;
+            int funct7 = (instruction >> 25) & 7;
+            int funct = (funct7 << 3) | funct3;
+            switch (funct) {
+                // ADD rd, rs1, rs2
+                case 0:
+                    cpu->xs[rd] = cpu->xs[rs1] + cpu->xs[rs2];
+                    break;
+                default:
+                    break;
+            }
             break;
         }
 
