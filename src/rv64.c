@@ -31,6 +31,52 @@ void step(RiscV64Cpu* cpu) {
                 case 0:
                     cpu->xs[rd] = cpu->xs[rs1] + cpu->xs[rs2];
                     break;
+
+                // SUB rd, rs1, rs2
+                case 256:
+                    cpu->xs[rd] = cpu->xs[rs1] - cpu->xs[rs2];
+                    break;
+
+                // SLL rd, rs1, rs2
+                case 1:
+                    cpu->xs[rd] = cpu->xs[rs1] << (cpu->xs[rs2] & 63);
+                    break;
+
+                // SLT rd, rs1, rs2
+                case 2:
+                    cpu->xs[rd] = (int64_t) cpu->xs[rs1] < (int64_t) cpu->xs[rs2];
+                    break;
+
+                // SLTU rd, rs1, rs2
+                case 3:
+                    cpu->xs[rd] = cpu->xs[rs1] < cpu->xs[rs2];
+                    break;
+
+                // XOR rd, rs1, rs2
+                case 4:
+                    cpu->xs[rd] = cpu->xs[rs1] ^ cpu->xs[rs2];
+                    break;
+
+                // SRL rd, rs1, rs2
+                case 5:
+                    cpu->xs[rd] = cpu->xs[rs1] >> (cpu->xs[rs2] & 63);
+                    break;
+
+                // SRA rd, rs1, rs2
+                case 261:
+                    cpu->xs[rd] = (int64_t) cpu->xs[rs1] >> (int64_t) (cpu->xs[rs2] & 63);
+                    break;
+
+                // OR rd, rs1, rs2
+                case 6:
+                    cpu->xs[rd] = cpu->xs[rs1] | cpu->xs[rs2];
+                    break;
+
+                // AND rd, rs1, rs2
+                case 7:
+                    cpu->xs[rd] = cpu->xs[rs1] & cpu->xs[rs2];
+                    break;
+
                 default:
                     break;
             }
