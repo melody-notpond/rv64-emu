@@ -18,7 +18,62 @@ void step(RiscV64Cpu* cpu) {
     uint32_t opcode = instruction & 0x7f;
 
     switch (opcode) {
-        // operation without immediate
+        // alu operation with immediate
+        case 0b0010011: {
+            int rd  = (instruction >>  7) & 0b11111;
+            int rs1 = (instruction >> 15) & 0b11111;
+            int64_t imm = ((int32_t) instruction) >> 20;
+            int funct = (instruction >> 12) & 3;
+            switch (funct) {
+                // ADD rd, rs1, rs2
+                case 0:
+                    cpu->xs[rd] = cpu->xs[rs1] + imm;
+                    break;
+
+                // SLL rd, rs1, rs2
+                case 1:
+                    cpu->xs[rd] = cpu->xs[rs1] << (imm & 63);
+                    break;
+
+                // SLT rd, rs1, rs2
+                case 2:
+                    cpu->xs[rd] = (int64_t) cpu->xs[rs1] < imm;
+                    break;
+
+                // SLTU rd, rs1, rs2
+                case 3:
+                    cpu->xs[rd] = cpu->xs[rs1] < (uint64_t) imm;
+                    break;
+
+                // XOR rd, rs1, rs2
+                case 4:
+                    cpu->xs[rd] = cpu->xs[rs1] ^ imm;
+                    break;
+
+                // SRL rd, rs1, rs2
+                case 5:
+                    if (imm & 0b010000000000)
+                        cpu->xs[rd] = (int64_t) cpu->xs[rs1] >> (int64_t) (imm & 63);
+                    else cpu->xs[rd] = cpu->xs[rs1] >> (imm & 63);
+                    break;
+
+                // OR rd, rs1, rs2
+                case 6:
+                    cpu->xs[rd] = cpu->xs[rs1] | imm;
+                    break;
+
+                // AND rd, rs1, rs2
+                case 7:
+                    cpu->xs[rd] = cpu->xs[rs1] & imm;
+                    break;
+
+                default:
+                    break;
+            }
+            break;
+        }
+
+        // alu operation without immediate
         case 0b0110011: {
             int rd  = (instruction >>  7) & 0b11111;
             int rs1 = (instruction >> 15) & 0b11111;
