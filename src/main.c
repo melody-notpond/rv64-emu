@@ -6,12 +6,11 @@ uint64_t get_add_instr(RiscV64Cpu* cpu, RiscVDataSize size, uint64_t address) {
     (void) cpu;
     (void) size;
     (void) address;
-    return 0xfff08093;
+    return 0xfffff0b7;
 }
 
 int main() {
     RiscV64Cpu cpu = new_cpu(get_add_instr, NULL, NULL);
-    cpu.xs[1] = 70;
     step(&cpu);
-    printf("result of x1: %li\n", cpu.xs[1]);
+    printf("result of x1: %lx\n", cpu.xs[1]);
 }

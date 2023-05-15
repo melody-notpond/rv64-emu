@@ -18,6 +18,15 @@ void step(RiscV64Cpu* cpu) {
     uint32_t opcode = instruction & 0x7f;
 
     switch (opcode) {
+        // LUI rd, imm
+        case 0b0110111: {
+            int rd  = (instruction >>  7) & 0b11111;
+            int64_t imm = ((int32_t) instruction) & ~0xfff;
+            imm = (imm << 32) >> 32;
+            cpu->xs[rd] = imm;
+            break;
+        }
+
         // alu operation with immediate
         case 0b0010011: {
             int rd  = (instruction >>  7) & 0b11111;
