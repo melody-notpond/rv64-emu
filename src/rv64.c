@@ -14,7 +14,6 @@ RiscV64Cpu new_cpu(RiscV64ReadFn read, RiscV64WriteFn write, void* user_data) {
 
 void step(RiscV64Cpu* cpu) {
     uint32_t instruction = cpu->read(cpu, RiscVDataSizeWord, cpu->pc);
-    cpu->pc += 4;
     uint32_t opcode = instruction & 0x7f;
 
     switch (opcode) {
@@ -24,6 +23,15 @@ void step(RiscV64Cpu* cpu) {
             int64_t imm = ((int32_t) instruction) & ~0xfff;
             imm = (imm << 32) >> 32;
             cpu->xs[rd] = imm;
+            break;
+        }
+
+        // LUI rd, imm
+        case 0b0010111: {
+            int rd  = (instruction >>  7) & 0b11111;
+            int64_t imm = ((int32_t) instruction) & ~0xfff;
+            imm = (imm << 32) >> 32;
+            cpu->xs[rd] = imm + cpu->pc;
             break;
         }
 
@@ -152,4 +160,5 @@ void step(RiscV64Cpu* cpu) {
     }
 
     cpu->xs[0] = 0;
+    cpu->pc += 4;
 }

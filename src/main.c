@@ -6,7 +6,7 @@ uint64_t get_add_instr(RiscV64Cpu* cpu, RiscVDataSize size, uint64_t address) {
     (void) cpu;
     (void) size;
     (void) address;
-    return 0xfffff0b7;
+    return 0xfffff097;
 }
 
 int main() {
